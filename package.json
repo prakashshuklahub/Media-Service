@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
-    "build": "tsc && tsc-alias",
+    "build": "tsc && npx --yes tsc-alias",
     "start": "node dist/server.js",
     "test": "jest --runInBand"
   },
