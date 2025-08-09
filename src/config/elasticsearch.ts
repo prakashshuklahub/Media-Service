@@ -1,20 +1,49 @@
 import { Client } from "@elastic/elasticsearch";
-import dotenv from "dotenv";
+import {
+  ELASTICSEARCH_HOST,
+  ELASTICSEARCH_PASSWORD,
+  ELASTICSEARCH_USERNAME,
+  ELASTICSEARCH_INDEX_NAME,
+  IMAGO_BASE_URL,
+} from "@/config/index";
 
-dotenv.config();
+/**
+ * Singleton wrapper around the Elasticsearch `Client`.
 
-const client = new Client({
-  node: process.env.ELASTICSEARCH_HOST || "",
-  auth: {
-    username: process.env.ELASTICSEARCH_USERNAME || "",
-    password: process.env.ELASTICSEARCH_PASSWORD || "",
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+ */
+class ElasticsearchClient {
+  private static instance: ElasticsearchClient | null = null;
+  private readonly client: Client;
 
-export const INDEX_NAME = process.env.ELASTICSEARCH_INDEX_NAME || "";
+  private constructor() {
+    this.client = new Client({
+      node: ELASTICSEARCH_HOST || "",
+      auth: {
+        username: ELASTICSEARCH_USERNAME || "",
+        password: ELASTICSEARCH_PASSWORD || "",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+  }
+
+  static getInstance(): ElasticsearchClient {
+    if (!this.instance) {
+      this.instance = new ElasticsearchClient();
+    }
+    return this.instance;
+  }
+
+  // Delegate to the underlying client while preserving types
+  search(
+    params: Parameters<Client["search"]>[0]
+  ): ReturnType<Client["search"]> {
+    return this.client.search(params as any) as ReturnType<Client["search"]>;
+  }
+}
+
+export const INDEX_NAME = ELASTICSEARCH_INDEX_NAME || "";
 
 export function buildMediaUrl(
   db: string | undefined,
@@ -22,7 +51,7 @@ export function buildMediaUrl(
 ): string | undefined {
   if (!db || !mediaId) return undefined;
   const paddedId = mediaId.padStart(10, "0");
-  return `https://www.imago-images.de/bild/${db}/${paddedId}/s.jpg`;
+  return `${IMAGO_BASE_URL}/bild/${db}/${paddedId}/s.jpg`;
 }
 
 export function transformElasticsearchHit(hit: any) {
@@ -58,4 +87,5 @@ export function transformElasticsearchHit(hit: any) {
   };
 }
 
-export default client;
+// Default export remains an object exposing `search` (singleton instance)
+export default ElasticsearchClient.getInstance();

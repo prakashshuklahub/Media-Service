@@ -34,7 +34,7 @@ export interface SearchResult {
   type?: string;
   total: number;
   count: number;
-  data: any[];
+  data: Media[];
   took?: number;
 }
 

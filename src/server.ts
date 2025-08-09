@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { PORT } from "@/config";
 import mediaRoutes from "./routes/media";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT;
+const PORT_FROM_ENV = PORT;
 
 app.use(cors());
 app.use(express.json());
@@ -30,4 +31,4 @@ app.use("*", (req, res) => {
   });
 });
 
-app.listen(PORT);
+app.listen(PORT_FROM_ENV);

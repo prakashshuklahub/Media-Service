@@ -92,8 +92,7 @@ export class MediaRepository {
       const hits = response.hits;
 
       const transformedData = hits.hits.map((hit: any) => {
-        const transformed = transformElasticsearchHit(hit);
-        return transformed;
+        return transformElasticsearchHit(hit);
       });
 
       return {
