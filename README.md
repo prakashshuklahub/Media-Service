@@ -13,7 +13,6 @@ A small TypeScript/Express service exposing a media search API backed by Elastic
 
 - Node.js (LTS recommended)
 - Yarn or npm
-- An Elasticsearch 8.x instance
 
 ### Setup
 
@@ -74,20 +73,6 @@ Example:
 curl "http://localhost:3000/api/media/search?q=dogs&limit=5&dateFrom=2024-01-01&dateTo=2024-12-31"
 ```
 
-### Project Structure
-
-```
-src/
-  config/elasticsearch.ts   # ES client and hit transformation
-  controllers/              # Express controllers
-  repositories/             # Data access logic (ES queries)
-  routes/                   # Express routers
-  services/                 # Business/service layer
-  types/                    # TypeScript types
-  utils/sanitize.ts         # Query param sanitization
-  server.ts                 # App bootstrap and middleware
-```
-
 ### Testing
 
 - Run tests: `npm test`
@@ -95,4 +80,3 @@ src/
 ### Notes
 
 - Environment variables are loaded via `dotenv`. Ensure `.env` exists for local runs.
-- Path alias `@/` points to `src/` (see `tsconfig.json` and Jest `moduleNameMapper`).

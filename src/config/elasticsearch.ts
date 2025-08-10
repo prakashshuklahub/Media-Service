@@ -9,7 +9,6 @@ import {
 
 /**
  * Singleton wrapper around the Elasticsearch `Client`.
-
  */
 class ElasticsearchClient {
   private static instance: ElasticsearchClient | null = null;
